@@ -1,6 +1,53 @@
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider";
+import Swal from "sweetalert2";
 
 const Register = () => {
+  const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const name = form.name.value;
+    const photoURL = form.photoURL.value;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      setError("Password must contain one special character.");
+      return;
+    } else if (password !== confirmPassword) {
+      setError("Password and Confirmed Password do not match.");
+      return;
+    } else {
+      setError("");
+    }
+
+    createUser(email, password)
+      .then(() => {
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: "Account Created Successfully",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          background: "#f0f0f0",
+          iconColor: "#4ade80",
+        });
+      })
+      .catch((err) => console.error(err));
+    form.reset();
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-100 via-green-50 to-lime-100 px-4">
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
@@ -28,11 +75,12 @@ const Register = () => {
             Fill in the details to create your account
           </p>
 
-          <form className="space-y-2">
+          <form onSubmit={handleRegister} className="space-y-2">
             <div>
               <label className="block mb-1 text-gray-600">Full Name</label>
               <input
                 type="text"
+                name="name"
                 placeholder="John Doe"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
@@ -43,6 +91,7 @@ const Register = () => {
               </label>
               <input
                 type="url"
+                name="photoURL"
                 placeholder="https://example.com/profile.jpg"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
@@ -52,6 +101,7 @@ const Register = () => {
               <label className="block mb-1 text-gray-600">Email</label>
               <input
                 type="email"
+                name="email"
                 placeholder="you@example.com"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
@@ -61,6 +111,7 @@ const Register = () => {
               <label className="block mb-1 text-gray-600">Password</label>
               <input
                 type="password"
+                name="password"
                 placeholder="••••••••"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-300"
               />
@@ -70,6 +121,8 @@ const Register = () => {
               Create Account
             </button>
           </form>
+
+          {error && <div className="text-red-500 p-2">{error}</div>}
 
           <p className="text-center mt-6 text-gray-600">
             Already have an account?{" "}

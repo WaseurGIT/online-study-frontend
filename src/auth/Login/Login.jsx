@@ -1,6 +1,55 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider";
+import Swal from "sweetalert2";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
+  const { loginUser, googleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    loginUser(email, password)
+      .then(() => {
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: "Login Successful",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          background: "#f0f0f0",
+          iconColor: "#4ade80",
+        });
+      })
+      .catch((err) => console.error(err));
+    form.reset();
+    navigate("/");
+  };
+
+  const handleGoogleLogin = async () => {
+    await googleLogin();
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "Logged with Google Successfully",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      background: "#f0f0f0",
+      iconColor: "#4ade80",
+    });
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-blue-50 to-cyan-100 px-4">
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
@@ -28,11 +77,12 @@ const Login = () => {
             Enter your credentials to access your account
           </p>
 
-          <form className="space-y-3">
+          <form onSubmit={handleLogin} className="space-y-3">
             <div>
               <label className="block mb-1 text-gray-600">Email</label>
               <input
                 type="email"
+                name="email"
                 placeholder="you@example.com"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
@@ -42,12 +92,33 @@ const Login = () => {
               <label className="block mb-1 text-gray-600">Password</label>
               <input
                 type="password"
+                name="password"
                 placeholder="••••••••"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
-            <button className="w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition font-medium">
+            <h1 className="text-right text-sm text-indigo-600 hover:underline cursor-pointer">
+              Forgot Password?
+            </h1>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-5">
+              <div className="flex-grow h-px bg-gray-300"></div>
+              <span className="text-gray-400 text-sm">OR</span>
+              <div className="flex-grow h-px bg-gray-300"></div>
+            </div>
+
+            {/* Google Login */}
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-xl hover:bg-gray-50 transition font-medium cursor-pointer"
+            >
+              <FcGoogle size={22} />
+              Continue with Google
+            </button>
+
+            <button className="cursor-pointer w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition font-medium">
               Login
             </button>
           </form>

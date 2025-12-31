@@ -8,46 +8,96 @@ const Login = () => {
   const { loginUser, googleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const saveUserToDB = async (user) => {
+    const token = await user.getIdToken();
+
+    const response = await fetch(`http://localhost:5000/users/${user.email}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const existingUser = await response.json();
+    if (existingUser) return;
+
+    const userData = {
+      name: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL || "",
+      uid: user.uid,
+      lastLogin: new Date(),
+    };
+
+    await fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
 
-    loginUser(email, password)
-      .then(() => {
-        Swal.fire({
-          toast: true,
-          position: "top-end",
-          icon: "success",
-          title: "Login Successful",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          background: "#f0f0f0",
-          iconColor: "#4ade80",
-        });
-      })
-      .catch((err) => console.error(err));
-    form.reset();
-    navigate("/");
+    try {
+      const result = await loginUser(email, password);
+      await saveUserToDB(result.user);
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Login Successful",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        background: "#f0f0f0",
+        iconColor: "#4ade80",
+      });
+
+      form.reset();
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: err.message,
+      });
+    }
   };
 
   const handleGoogleLogin = async () => {
-    await googleLogin();
-    Swal.fire({
-      toast: true,
-      position: "top-end",
-      icon: "success",
-      title: "Logged with Google Successfully",
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-      background: "#f0f0f0",
-      iconColor: "#4ade80",
-    });
-    navigate("/");
+    try {
+      const result = await googleLogin(); // this is signInWithPopup
+
+      await saveUserToDB(result.user);
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: `Welcome ${result.user.displayName}`,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        background: "#f0f0f0",
+        iconColor: "#4ade80",
+      });
+
+      navigate("/"); // navigate only after successful login
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.message,
+      });
+    }
   };
 
   return (
@@ -77,7 +127,7 @@ const Login = () => {
             Enter your credentials to access your account
           </p>
 
-          <form onSubmit={handleLogin} className="space-y-3">
+          <form onSubmit={handleLogin} className="space-y-2">
             <div>
               <label className="block mb-1 text-gray-600">Email</label>
               <input
@@ -111,6 +161,7 @@ const Login = () => {
 
             {/* Google Login */}
             <button
+              type="button"
               onClick={handleGoogleLogin}
               className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-xl hover:bg-gray-50 transition font-medium cursor-pointer"
             >
@@ -118,7 +169,10 @@ const Login = () => {
               Continue with Google
             </button>
 
-            <button className="cursor-pointer w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition font-medium">
+            <button
+              type="submit"
+              className="cursor-pointer w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition font-medium"
+            >
               Login
             </button>
           </form>

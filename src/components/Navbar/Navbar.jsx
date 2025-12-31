@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider";
+import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {})
+      .catch((err) => console.error(err));
+  };
 
   return (
     <nav className="bg-white shadow-md px-6 py-4">
@@ -31,14 +40,45 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Login Button */}
-        <div className="hidden md:block">
-          <Link
-            to="/login"
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Login
-          </Link>
+        {/* Right Section */}
+        <div className="hidden md:flex items-center gap-4">
+          {user ? (
+            <div className="relative group flex items-center gap-3">
+              {/* Profile Picture */}
+              <div className="relative group cursor-pointer">
+                {user.photoURL ? (
+                  <img
+                    src={user.photoURL}
+                    alt={user.displayName}
+                    className="w-12 h-12 rounded-full"
+                  />
+                ) : (
+                  <FaUserCircle size={24} />
+                )}
+
+                {/* Tooltip with Name */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-gray-900 text-white text-sm font-medium rounded-lg py-1 px-3 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none shadow-lg top-8 z-50">
+                  {user.displayName.split(" ")[0]}
+                  {/* Arrow */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                </div>
+              </div>
+
+              <button
+                onClick={logOut}
+                className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-blue-600 text-white py-1 px-4 rounded-lg hover:bg-blue-700"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -54,12 +94,24 @@ const Navbar = () => {
             <Link to="/">Home</Link>
             <Link to="/assignments">Assignments</Link>
             <Link to="/about">About</Link>
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white py-2 rounded-lg"
-            >
-              Login
-            </Link>
+            {user ? (
+              <div className="flex justify-center gap-2 items-center">
+                <FaUserCircle size={24} style={{ cursor: "pointer" }} />
+                <button
+                  onClick={handleLogOut}
+                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 cursor-pointer"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-blue-600 text-white py-2 rounded-lg cursor-pointer"
+              >
+                Login
+              </Link>
+            )}
           </ul>
         </div>
       )}

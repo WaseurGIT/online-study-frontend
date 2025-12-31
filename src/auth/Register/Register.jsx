@@ -2,11 +2,13 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
 import Swal from "sweetalert2";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState("");
+
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -22,30 +24,52 @@ const Register = () => {
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       setError("Password must contain one special character.");
       return;
-    } else if (password !== confirmPassword) {
-      setError("Password and Confirmed Password do not match.");
-      return;
     } else {
       setError("");
     }
 
     createUser(email, password)
-      .then(() => {
-        Swal.fire({
-          toast: true,
-          position: "top-end",
-          icon: "success",
-          title: "Account Created Successfully",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          background: "#f0f0f0",
-          iconColor: "#4ade80",
-        });
+      .then((result) => {
+        const currentUser = result.user;
+
+        // Update profile
+        updateProfile(currentUser, {
+          displayName: name,
+          photoURL: photoURL,
+        })
+          .then(() => {
+            const userData = {
+              name: name, // ✅ use form value
+              email: email,
+              photoURL: photoURL,
+              uid: currentUser.uid,
+            };
+
+            return fetch("http://localhost:5000/users", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            });
+          })
+          .then((res) => res.json())
+          .then(() => {
+            Swal.fire({
+              toast: true,
+              position: "top-end",
+              icon: "success",
+              title: "Account Created Successfully",
+              showConfirmButton: false,
+              timer: 2000,
+            });
+
+            form.reset();
+            navigate("/");
+          })
+          .catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
-    form.reset();
-    navigate("/");
   };
 
   return (

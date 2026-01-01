@@ -13,7 +13,7 @@ const Login = () => {
 
     const response = await fetch(`http://localhost:5000/users/${user.email}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
     });
 
@@ -73,7 +73,7 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await googleLogin(); // this is signInWithPopup
+      const result = await googleLogin();
 
       await saveUserToDB(result.user);
 
@@ -89,7 +89,7 @@ const Login = () => {
         iconColor: "#4ade80",
       });
 
-      navigate("/"); // navigate only after successful login
+      navigate("/");
     } catch (error) {
       console.error(error);
       Swal.fire({

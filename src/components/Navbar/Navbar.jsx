@@ -57,7 +57,7 @@ const Navbar = () => {
                 )}
 
                 {/* Tooltip with Name */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-gray-900 text-white text-sm font-medium rounded-lg py-1 px-3 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none shadow-lg top-8 z-50">
+                <div className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-gray-900 text-white text-sm font-medium rounded-lg py-1 px-3 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none shadow-lg top-10 z-50">
                   {user.displayName.split(" ")[0]}
                   {/* Arrow */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-2 h-2 bg-gray-900 rotate-45"></div>

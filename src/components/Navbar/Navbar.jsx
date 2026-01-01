@@ -17,7 +17,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-md px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="text-2xl font-bold text-blue-600">
+        <div className="text-2xl font-bold text-blue-600 pacifico-regular">
           <Link to="/">StudyHub</Link>
         </div>
 

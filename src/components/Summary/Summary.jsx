@@ -1,9 +1,10 @@
 import React from 'react';
+import SectionTitle from '../SectionTitle/SectionTitle';
 
 const Summary = () => {
     return (
         <div>
-            <h1>summary</h1>
+            <SectionTitle title="Summary"></SectionTitle>
         </div>
     );
 };

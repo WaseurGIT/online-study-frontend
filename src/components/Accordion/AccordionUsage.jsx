@@ -5,14 +5,13 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
+import SectionTitle from "../SectionTitle/SectionTitle";
 
 export default function AccordionUsage() {
   return (
-    <div className="mx-5 md:mx-20 lg:mx-40 my-10">
+    <div className="mx-5 md:mx-20 lg:mx-40 my-20">
       <div>
-        <h1 className="text-3xl my-10 font-semibold flex justify-center">
-          FAQ
-        </h1>
+        <SectionTitle title="FAQ"></SectionTitle>
       </div>
 
       <Accordion>

@@ -10,6 +10,7 @@ import Login from "./auth/Login/Login.jsx";
 import Register from "./auth/Register/Register.jsx";
 import AuthProvider from "./contexts/AuthProvider.jsx";
 import Assignments from "./components/Assignments/Assignments.jsx";
+import CreateAssignment from "./components/CreateAssignment/CreateAssignment.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/assignments",
         element: <Assignments></Assignments>,
+      },
+      {
+        path:'/createAssignment',
+        element: <CreateAssignment></CreateAssignment>
       }
     ],
   },

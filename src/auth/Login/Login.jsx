@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 
 const Login = () => {
   const { loginUser, googleLogin } = useContext(AuthContext);
@@ -46,7 +47,18 @@ const Login = () => {
 
     try {
       const result = await loginUser(email, password);
+
+      // 🔥 STEP 1: get backend JWT
+      const jwtRes = await axios.post("http://localhost:5000/jwt", {
+        email: result.user.email,
+      });
+
+      // 🔥 STEP 2: save token
+      localStorage.setItem("access-token", jwtRes.data.token);
+
+      // 🔥 STEP 3: save user to DB
       await saveUserToDB(result.user);
+
       Swal.fire({
         toast: true,
         position: "top-end",
@@ -54,9 +66,6 @@ const Login = () => {
         title: "Login Successful",
         showConfirmButton: false,
         timer: 2000,
-        timerProgressBar: true,
-        background: "#f0f0f0",
-        iconColor: "#4ade80",
       });
 
       form.reset();
@@ -75,6 +84,13 @@ const Login = () => {
     try {
       const result = await googleLogin();
 
+      // 🔥 get backend JWT
+      const jwtRes = await axios.post("http://localhost:5000/jwt", {
+        email: result.user.email,
+      });
+
+      localStorage.setItem("access-token", jwtRes.data.token);
+
       await saveUserToDB(result.user);
 
       Swal.fire({
@@ -84,9 +100,6 @@ const Login = () => {
         title: `Welcome ${result.user.displayName}`,
         showConfirmButton: false,
         timer: 2000,
-        timerProgressBar: true,
-        background: "#f0f0f0",
-        iconColor: "#4ade80",
       });
 
       navigate("/");

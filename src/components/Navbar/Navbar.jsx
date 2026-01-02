@@ -33,6 +33,14 @@ const Navbar = () => {
               Assignments
             </Link>
           </li>
+          {user && (
+            <li>
+              <Link to="/submission" className="hover:text-blue-600">
+                My Submissions
+              </Link>
+            </li>
+          )}
+
           <li>
             <Link to="/about" className="hover:text-blue-600">
               About

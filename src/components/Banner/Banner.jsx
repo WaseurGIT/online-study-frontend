@@ -1,6 +1,10 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider";
 
 const Banner = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <section
       className="relative min-h-[85vh] flex items-center text-white"
@@ -30,7 +34,8 @@ const Banner = () => {
 
           <div className="flex flex-wrap gap-4">
             <Link
-              to="/register"
+              to={user ? "#" : "/register"}
+              onClick={(e) => user && e.preventDefault()}
               className="bg-white text-indigo-700 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
             >
               Get Started

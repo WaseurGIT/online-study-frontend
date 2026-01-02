@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300">
@@ -10,9 +12,9 @@ const Footer = () => {
 
         {/* Center Links */}
         <div className="flex gap-6 text-sm">
-          <a href="#" className="hover:text-white transition">Home</a>
-          <a href="#" className="hover:text-white transition">Assignments</a>
-          <a href="#" className="hover:text-white transition">About</a>
+          <Link to='/' className="hover:text-white transition">Home</Link>
+          <Link to='/assignments' className="hover:text-white transition">Assignments</Link>
+          <Link to='/about' className="hover:text-white transition">About</Link>
         </div>
 
         {/* Right */}

@@ -46,6 +46,9 @@ const AssignmentCard = ({ assignment, onDelete }) => {
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {assignment.description}
           </Typography>
+          <Typography color="success" paddingTop="5px">
+            Marks : {assignment.marks}
+          </Typography>
         </CardContent>
         <CardActions>
           {user && user.email === assignment.creatorEmail && (

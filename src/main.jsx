@@ -11,6 +11,8 @@ import Register from "./auth/Register/Register.jsx";
 import AuthProvider from "./contexts/AuthProvider.jsx";
 import Assignments from "./components/Assignments/Assignments.jsx";
 import CreateAssignment from "./components/CreateAssignment/CreateAssignment.jsx";
+import Submission from "./components/Submission/Submission.jsx";
+import SubmitAssignment from "./components/SubmitAssignment/SubmitAssignment.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,9 +37,17 @@ const router = createBrowserRouter([
         element: <Assignments></Assignments>,
       },
       {
-        path:'/createAssignment',
-        element: <CreateAssignment></CreateAssignment>
-      }
+        path: "/createAssignment",
+        element: <CreateAssignment></CreateAssignment>,
+      },
+      {
+        path: "/submission",
+        element: <Submission></Submission>,
+      },
+      {
+        path: "/submitAssignment",
+        element: <SubmitAssignment></SubmitAssignment>,
+      },
     ],
   },
 ]);

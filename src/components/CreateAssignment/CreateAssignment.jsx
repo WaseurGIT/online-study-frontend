@@ -14,9 +14,6 @@ const CreateAssignment = () => {
     thumbnailUrl: "",
     difficulty: "easy",
     dueDate: "",
-    creatorEmail: user?.email || "",
-    creatorName: user?.displayName || "",
-    createdAt: new Date().toISOString(),
   });
 
   if (!user) {
@@ -37,14 +34,17 @@ const CreateAssignment = () => {
 
     const token = localStorage.getItem("access-token");
     if (!token) {
-      Swal.fire("Error!", "You must be logged in to create an assignment.", "error");
+      Swal.fire(
+        "Error!",
+        "You must be logged in to create an assignment.",
+        "error"
+      );
       return;
     }
 
     const assignment = {
       ...formData,
       marks: Number(formData.marks),
-      createdAt: new Date(),
     };
 
     try {
@@ -60,9 +60,6 @@ const CreateAssignment = () => {
         thumbnailUrl: "",
         difficulty: "easy",
         dueDate: "",
-        creatorEmail: user?.email || "",
-        creatorName: user?.displayName || "",
-        createdAt: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Error saving assignment:", error.response?.data);

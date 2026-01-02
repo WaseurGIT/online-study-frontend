@@ -10,33 +10,38 @@ const Login = () => {
   const navigate = useNavigate();
 
   const saveUserToDB = async (user) => {
-    const token = await user.getIdToken();
+  const token = localStorage.getItem("access-token");
 
-    const response = await fetch(`http://localhost:5000/users/${user.email}`, {
+  const response = await fetch(
+    `http://localhost:5000/users/${user.email}`,
+    {
       headers: {
         authorization: `Bearer ${token}`,
       },
-    });
+    }
+  );
 
-    const existingUser = await response.json();
-    if (existingUser) return;
+  // if user exists, backend should return something
+  if (response.status === 200) return;
 
-    const userData = {
-      name: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL || "",
-      uid: user.uid,
-      lastLogin: new Date(),
-    };
-
-    await fetch("http://localhost:5000/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+  const userData = {
+    name: user.displayName,
+    email: user.email,
+    photoURL: user.photoURL || "",
+    uid: user.uid,
+    lastLogin: new Date(),
   };
+
+  await fetch("http://localhost:5000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+};
+
 
   const handleLogin = async (e) => {
     e.preventDefault();

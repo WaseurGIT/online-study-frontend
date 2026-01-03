@@ -1,9 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axiosSecure from "../../api/axios";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../contexts/AuthProvider";
+import { useParams } from "react-router-dom";
 
 const SubmitAssignment = () => {
+  const { id } = useParams();
   const { user } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
@@ -55,6 +57,17 @@ const SubmitAssignment = () => {
       );
     }
   };
+
+  useEffect(() => {
+    axiosSecure.get(`/assignments/${id}`).then((res) => {
+      setFormData((prev) => ({
+        ...prev,
+        assignmentId: res.data.assignment_id,
+        assignmentTitle: res.data.title,
+        assignmentMarks: res.data.marks,
+      }));
+    });
+  }, [id]);
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-md my-10">

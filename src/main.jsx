@@ -13,6 +13,7 @@ import Assignments from "./components/Assignments/Assignments.jsx";
 import CreateAssignment from "./components/CreateAssignment/CreateAssignment.jsx";
 import Submission from "./components/Submission/Submission.jsx";
 import SubmitAssignment from "./components/SubmitAssignment/SubmitAssignment.jsx";
+import AssignmentDetails from "./components/AssignmentDetails/AssignmentDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,11 +42,15 @@ const router = createBrowserRouter([
         element: <CreateAssignment></CreateAssignment>,
       },
       {
+        path: "/assignments/:id",
+        element: <AssignmentDetails></AssignmentDetails>,
+      },
+      {
         path: "/submission",
         element: <Submission></Submission>,
       },
       {
-        path: "/submitAssignment",
+        path: "/submitAssignment/:id",
         element: <SubmitAssignment></SubmitAssignment>,
       },
     ],

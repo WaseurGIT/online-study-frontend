@@ -9,6 +9,7 @@ import axiosSecure from "../../api/axios";
 import Swal from "sweetalert2";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider";
+import { Link } from "react-router-dom";
 
 const AssignmentCard = ({ assignment, onDelete }) => {
   const { user } = useContext(AuthContext);
@@ -27,7 +28,11 @@ const AssignmentCard = ({ assignment, onDelete }) => {
       }
     } catch (error) {
       console.error("Error deleting assignment:", error);
-      Swal.fire("Error!", "Failed to delete assignment. Please try again.", "error");
+      Swal.fire(
+        "Error!",
+        "Failed to delete assignment. Please try again.",
+        "error"
+      );
     }
   };
 
@@ -56,7 +61,13 @@ const AssignmentCard = ({ assignment, onDelete }) => {
               <MdDelete className="text-red-500 text-2xl" />
             </Button>
           )}
-          <Button size="small">Learn More</Button>
+          <Link
+            to={`/assignments/${assignment._id}`}
+            size="small"
+            className="py-2 px-5 font-semibold text-blue-500 bg-gray-200 rounded-2xl"
+          >
+            View Details
+          </Link>
         </CardActions>
       </Card>
     </div>

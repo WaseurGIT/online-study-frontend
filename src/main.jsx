@@ -14,6 +14,7 @@ import CreateAssignment from "./components/CreateAssignment/CreateAssignment.jsx
 import Submission from "./components/Submission/Submission.jsx";
 import SubmitAssignment from "./components/SubmitAssignment/SubmitAssignment.jsx";
 import AssignmentDetails from "./components/AssignmentDetails/AssignmentDetails.jsx";
+import Contact from "./components/Contact/Contact.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register></Register>,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
       {
         path: "/assignments",
